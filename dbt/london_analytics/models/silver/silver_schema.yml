@@ -1,0 +1,184 @@
+version: 2
+
+models:
+
+  - name: silver_police_street
+    description: "Silver-level street crime records cleaned, typed and deduplicated. Grain: one row per unique crime. Filtered to London LSOAs starting with 'E01'."
+    columns:
+      - name: crime_id
+        description: "Unique crime identifier from the source table."
+        tests:
+          - not_null
+          - unique
+      - name: crime_date
+        description: "Date of the crime (first day of month) converted from source 'month' (YYYY-MM -> YYYY-MM-01)."
+        tests:
+          - not_null
+      - name: crime_year
+        description: "Year extracted from `crime_date`."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [2021, 2022, 2023]
+      - name: crime_month_num
+        description: "Month number (1-12) extracted from `crime_date`."
+      - name: crime_quarter
+        description: "Quarter derived from `crime_month_num` (Q1..Q4)."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Q1','Q2','Q3','Q4']
+      - name: crime_type
+        description: "Crime category/type (trimmed)."
+        tests:
+          - not_null
+      - name: lsoa_code
+        description: "LSOA 2021 code for the crime location (trimmed). Filtered to London LSOAs starting with 'E01'."
+        tests:
+          - not_null
+      - name: lsoa_name
+        description: "LSOA 2021 name (trimmed)."
+      - name: latitude
+        description: "Latitude cast to FLOAT."
+      - name: longitude
+        description: "Longitude cast to FLOAT."
+      - name: location
+        description: "Free-text location description (trimmed)."
+      - name: last_outcome
+        description: "Last outcome category for the crime (trimmed)."
+      - name: reported_by
+        description: "Recording agency/department (trimmed)."
+      - name: falls_within
+        description: "Administrative area that the record falls within (trimmed)."
+
+  - name: silver_companies_london
+    description: "Silver-level snapshot of active UK companies filtered to London by postcode prefix. Grain: one row per active London company."
+    columns:
+      - name: company_number
+        description: "Company registration number (trimmed)."
+        tests:
+          - not_null
+          - unique
+      - name: company_name
+        description: "Registered company name (trimmed)."
+        tests:
+          - not_null
+      - name: postcode
+        description: "Normalized (upper-case) postcode for the registered address."
+        tests:
+          - not_null
+      - name: postcode_district
+        description: "Outward postcode (district / outward code) extracted from `postcode` (e.g. 'SW1A')."
+      - name: address_line1
+        description: "First line of the registered address (trimmed)."
+      - name: post_town
+        description: "Registered post town (trimmed)."
+      - name: company_category
+        description: "Company category from Companies House."
+      - name: company_status
+        description: "Company status (filtered to 'Active')."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Active']
+      - name: incorporation_date
+        description: "Date of incorporation."
+      - name: incorporation_year
+        description: "Year of incorporation."
+      - name: company_age_years
+        description: "Company age in years calculated as DATEDIFF(year, incorporation_date, GETDATE())."
+        tests:
+          - not_null
+      - name: company_age_band
+        description: "Human-friendly age band derived from `company_age_years`."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['0-2 years','3-5 years','6-10 years','11-20 years','20+ years']
+      - name: sic_code_primary
+        description: "Primary SIC code / description (trimmed)."
+      - name: sic_code_secondary
+        description: "Secondary SIC code / description (trimmed)."
+
+  - name: silver_population_lsoa
+    description: "LSOA-level total population aggregated from Census 2021 cross-tab data. Grain: one row per LSOA."
+    columns:
+      - name: lsoa_code
+        description: "LSOA 2021 code (trimmed)."
+        tests:
+          - not_null
+          - unique
+      - name: lsoa_name
+        description: "LSOA 2021 name (trimmed)."
+        tests:
+          - not_null
+      - name: total_population
+        description: "Total population for the LSOA (SUM of all Census cross-tab observations)."
+        tests:
+          - not_null
+      - name: population_band
+        description: "Population band derived from `total_population` ('Very Small','Small','Medium','Large')."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Very Small','Small','Medium','Large']
+
+  - name: silver_deprivation
+    description: "LSOA-level IMD 2025 deprivation indicators deduplicated to LSOA and filtered to London (LAD code E09 prefix)."
+    columns:
+      - name: lsoa_code
+        description: "LSOA 2021 code (trimmed)."
+        tests:
+          - not_null
+          - unique
+      - name: lsoa_name
+        description: "LSOA 2021 name (trimmed)."
+        tests:
+          - not_null
+      - name: lad_code
+        description: "Local Authority District (LAD) code 2024 (used to filter to London E09*)."
+      - name: lad_name
+        description: "Local Authority District name (borough name, trimmed)."
+      - name: imd_rank
+        description: "Index of Multiple Deprivation rank for LSOA where 1 is most deprived."
+        tests:
+          - not_null
+      - name: imd_decile
+        description: "IMD decile (1-10) where 1 is most deprived."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1,2,3,4,5,6,7,8,9,10]
+      - name: income_rank
+        description: "Income domain rank for the LSOA."
+      - name: income_decile
+        description: "Income domain decile for the LSOA."
+      - name: employment_rank
+        description: "Employment domain rank for the LSOA."
+      - name: employment_decile
+        description: "Employment domain decile for the LSOA."
+      - name: education_rank
+        description: "Education, skills & training domain rank for the LSOA."
+      - name: education_decile
+        description: "Education, skills & training domain decile for the LSOA."
+      - name: health_rank
+        description: "Health deprivation & disability domain rank for the LSOA."
+      - name: health_decile
+        description: "Health deprivation & disability decile for the LSOA."
+      - name: crime_deprivation_rank
+        description: "Crime domain rank for the LSOA."
+      - name: crime_deprivation_decile
+        description: "Crime domain decile for the LSOA."
+      - name: living_env_rank
+        description: "Living environment domain rank for the LSOA."
+      - name: living_env_decile
+        description: "Living environment domain decile for the LSOA."
+      - name: deprivation_category
+        description: "Categorical label derived from `imd_decile` ('Highly Deprived'..'Least Deprived')."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Highly Deprived','Deprived','Average','Low Deprivation','Least Deprived']
