@@ -1,23 +1,227 @@
+# =============================================================================
+# SECRETS & ENVIRONMENT
+# =============================================================================
+.env
+.env.*
+!.env.example          # always keep the example template
+*.pem
+*.key
+*.p12
+*.pfx
+*.cert
+
+
+# =============================================================================
+# TERRAFORM
+# =============================================================================
 terraform/.terraform/
-terraform/*.tfvars
+terraform/.terraform.lock.hcl
 terraform/*.tfstate
 terraform/*.tfstate.backup
+terraform/*.tfvars
+!terraform/*.tfvars.example
+terraform/override.tf
+terraform/override.tf.json
+terraform/*_override.tf
+terraform/*_override.tf.json
+terraform/crash.log
+terraform/plan.out
 
 
+# =============================================================================
+# RAW DATA — never commit source files
+# =============================================================================
+ingestion/**/raw/
+ingestion/**/raw/**
 *.csv
-*.json
+*.tsv
 *.xlsx
 *.xls
-*.xml
-*.log
-*.bak
-*.tmp
+*.parquet
+*.delta
+*.avro
+*.orc
+*.geojson
+*.shp
+*.dbf
+*.prj
+*.shx
 
 
-.env
-.venv/
+# =============================================================================
+# PYTHON
+# =============================================================================
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+wheels/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+.Python
+
+# Virtual environments
+.venv/
 venv/
+env/
+ENV/
+.virtualenv/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pytype/
+.pyre/
+
+# Testing
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+nosetests.xml
+pytest.xml
+
+
+# =============================================================================
+# JUPYTER NOTEBOOKS
+# =============================================================================
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+*.ipynb_checkpoints
+profile_default/
+ipython_config.py
+
+
+# =============================================================================
+# dbt
+# =============================================================================
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+dbt/.user.yml
+dbt/profiles.yml        # profiles live in ~/.dbt/ not in the repo
+
+
+# =============================================================================
+# AIRFLOW
+# =============================================================================
+airflow/logs/
+airflow/airflow.db
+airflow/airflow.cfg
+airflow/webserver_config.py
+airflow/standalone_admin_password.txt
+airflow/unittests.cfg
+
+
+# =============================================================================
+# DOCKER
+# =============================================================================
+*.pid
+docker-compose.override.yml
+
+
+# =============================================================================
+# LOGS & TEMP FILES
+# =============================================================================
+*.log
+*.log.*
+logs/
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+
+# =============================================================================
+# OPERATING SYSTEM
+# =============================================================================
+
+# macOS
+.DS_Store
+.DS_Store?
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+.VolumeIcon.icns
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+
+# =============================================================================
+# IDEs & EDITORS
+# =============================================================================
+
+# VS Code
+.vscode/
+!.vscode/extensions.json   # keep recommended extensions list
+!.vscode/settings.json     # keep shared project settings
+
+# JetBrains (PyCharm etc)
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Vim / Emacs
+*.swp
+*.swo
+\#*\#
+.\#*
+
+
+# =============================================================================
+# MICROSOFT FABRIC / AZURE
+# =============================================================================
+*.pbix                     # Power BI files contain data — don't commit
+*.pbip                     # Power BI project files
+.trident/
+
+
+# =============================================================================
+# SPARK / PYSPARK
+# =============================================================================
+derby.log
+metastore_db/
+spark-warehouse/
+checkpoints/
+
+
+# =============================================================================
+# MISC
+# =============================================================================
+*.xml
+*.zip
+*.gz
+*.tar
+*.rar
+*.7z
+*.bz2

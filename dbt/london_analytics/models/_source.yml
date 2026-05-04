@@ -1,0 +1,15 @@
+# dbt/models/sources.yml
+version: 2
+
+sources:
+  - name: bronze
+    database: london_lakehouse
+    schema: dbo
+    tables:
+      - name: police_street
+      - name: police_outcomes
+      - name: police_stop_and_search
+      - name: companies_house
+      - name: ons_population
+      - name: ons_deprivation
+      - name: ons_boundaries
