@@ -30,6 +30,10 @@ from pathlib import Path
 from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 
+# to handle ancient date
+spark.conf.set("spark.sql.parquet.datetimeRebaseModeInWrite", "CORRECTED")
+spark.conf.set("spark.sql.avro.datetimeRebaseModeInWrite",    "CORRECTED")
+
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
@@ -121,43 +125,46 @@ def optimize_table(table_name: str) -> None:
 # CELL ********************
 
 def ingest_companies_house():
-    # Wildcard read — works regardless of exact filename
     source_path = f"{FILES_ROOT}/companies_house/*.csv"
     logger.info(f"Reading Companies House from {source_path}")
 
-    # ADDED: multiLine=True to handle hidden line breaks in company names/addresses
     df = spark.read.csv(
-        source_path, 
-        header=True, 
-        quote='"', 
-        escape='"', 
-        mode="DROPMALFORMED"
+        source_path,
+        header=True,
+        quote='"',
+        escape='"',
+        multiLine=True,                          # actually passed now, not just a comment
+        encoding="UTF-8",
+        ignoreLeadingWhiteSpace=True,
+        ignoreTrailingWhiteSpace=True,
+        mode="PERMISSIVE",                       # keep bad rows, don't silently drop
+        columnNameOfCorruptRecord="_corrupt"     # bad rows land here, visible to you
     )
-    
-    df = clean_df_columns(df)
 
+    # Check for corrupt rows before doing anything else
+    if "_corrupt" in df.columns:
+        bad_rows = df.filter(F.col("_corrupt").isNotNull()).count()
+        logger.warning(f"Corrupt rows detected: {bad_rows}")
+        df = df.filter(F.col("_corrupt").isNull()).drop("_corrupt")
+
+    df = clean_df_columns(df)
+    logger.info(f"Columns after cleaning: {df.columns}")
+    logger.info(f"Row count after cleaning: {df.count()}")
+
+    # Date parsing — only if column exists
     if "incorporation_date" in df.columns:
         df = df.withColumn(
             "incorporation_date",
             F.to_date(F.col("incorporation_date"), "dd/MM/yyyy")
         )
-        return df.withColumn("incorporation_year", F.year("incorporation_date"))
+        df = df.withColumn("incorporation_year", F.year("incorporation_date"))
 
-    # write_bronze_table(df, "companies_house", partition_cols=["incorporation_year"])
+    # Always write — not inside the if block
+    write_bronze_table(df, "companies_house", partition_cols=["incorporation_year"])
+    
+    return df                                    # return after writing, not before
 
-df = ingest_companies_house()
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
-# CELL ********************
-
-# display(df)
-df.write.format("delta").mode("overwrite").saveAsTable("df_test")
+ingest_companies_house()
 
 # METADATA ********************
 
