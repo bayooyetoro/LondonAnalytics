@@ -1,0 +1,873 @@
+{
+  "name": "{{Dataset_Name}}",
+  "compatibilityLevel": 1604,
+  "model": {
+    "name": "{{Dataset_Name}}",
+    "culture": "en-US",
+    "collation": "Latin1_General_100_BIN2_UTF8",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "silver_companies_london",
+        "sourceLineageTag": "[silver].[silver_companies_london]",
+        "columns": [
+          {
+            "name": "company_number",
+            "dataType": "string",
+            "sourceColumn": "company_number",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "company_number",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "company_name",
+            "dataType": "string",
+            "sourceColumn": "company_name",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "company_name",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "postcode",
+            "dataType": "string",
+            "sourceColumn": "postcode",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "postcode",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "address_line1",
+            "dataType": "string",
+            "sourceColumn": "address_line1",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "address_line1",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "post_town",
+            "dataType": "string",
+            "sourceColumn": "post_town",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "post_town",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "company_category",
+            "dataType": "string",
+            "sourceColumn": "company_category",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "company_category",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "company_status",
+            "dataType": "string",
+            "sourceColumn": "company_status",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "company_status",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "incorporation_date",
+            "dataType": "dateTime",
+            "sourceColumn": "incorporation_date",
+            "formatString": "General Date",
+            "sourceProviderType": "date",
+            "sourceLineageTag": "incorporation_date",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "incorporation_year",
+            "dataType": "int64",
+            "sourceColumn": "incorporation_year",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "incorporation_year",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "sic_code_primary",
+            "dataType": "string",
+            "sourceColumn": "sic_code_primary",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "sic_code_primary",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "sic_code_secondary",
+            "dataType": "string",
+            "sourceColumn": "sic_code_secondary",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "sic_code_secondary",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "postcode_district",
+            "dataType": "string",
+            "sourceColumn": "postcode_district",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "postcode_district",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "company_age_years",
+            "dataType": "int64",
+            "sourceColumn": "company_age_years",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "company_age_years",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "company_age_band",
+            "dataType": "string",
+            "sourceColumn": "company_age_band",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "company_age_band",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "silver_companies_london",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "silver"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "silver_deprivation",
+        "sourceLineageTag": "[silver].[silver_deprivation]",
+        "columns": [
+          {
+            "name": "lsoa_code",
+            "dataType": "string",
+            "sourceColumn": "lsoa_code",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "lsoa_code",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "lsoa_name",
+            "dataType": "string",
+            "sourceColumn": "lsoa_name",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "lsoa_name",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "lad_code",
+            "dataType": "string",
+            "sourceColumn": "lad_code",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "lad_code",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "lad_name",
+            "dataType": "string",
+            "sourceColumn": "lad_name",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "lad_name",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "imd_rank",
+            "dataType": "int64",
+            "sourceColumn": "imd_rank",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "imd_rank",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "imd_decile",
+            "dataType": "int64",
+            "sourceColumn": "imd_decile",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "imd_decile",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "income_rank",
+            "dataType": "int64",
+            "sourceColumn": "income_rank",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "income_rank",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "income_decile",
+            "dataType": "int64",
+            "sourceColumn": "income_decile",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "income_decile",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "employment_rank",
+            "dataType": "int64",
+            "sourceColumn": "employment_rank",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "employment_rank",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "employment_decile",
+            "dataType": "int64",
+            "sourceColumn": "employment_decile",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "employment_decile",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "education_rank",
+            "dataType": "int64",
+            "sourceColumn": "education_rank",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "education_rank",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "education_decile",
+            "dataType": "int64",
+            "sourceColumn": "education_decile",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "education_decile",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "health_rank",
+            "dataType": "int64",
+            "sourceColumn": "health_rank",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "health_rank",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "health_decile",
+            "dataType": "int64",
+            "sourceColumn": "health_decile",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "health_decile",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "crime_deprivation_rank",
+            "dataType": "int64",
+            "sourceColumn": "crime_deprivation_rank",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "crime_deprivation_rank",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "crime_deprivation_decile",
+            "dataType": "int64",
+            "sourceColumn": "crime_deprivation_decile",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "crime_deprivation_decile",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "living_env_rank",
+            "dataType": "int64",
+            "sourceColumn": "living_env_rank",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "living_env_rank",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "living_env_decile",
+            "dataType": "int64",
+            "sourceColumn": "living_env_decile",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "living_env_decile",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "deprivation_category",
+            "dataType": "string",
+            "sourceColumn": "deprivation_category",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "deprivation_category",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "silver_deprivation",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "silver"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "silver_police_street",
+        "sourceLineageTag": "[silver].[silver_police_street]",
+        "columns": [
+          {
+            "name": "crime_id",
+            "dataType": "string",
+            "sourceColumn": "crime_id",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "crime_id",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "crime_date",
+            "dataType": "dateTime",
+            "sourceColumn": "crime_date",
+            "formatString": "General Date",
+            "sourceProviderType": "date",
+            "sourceLineageTag": "crime_date",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "reported_by",
+            "dataType": "string",
+            "sourceColumn": "reported_by",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "reported_by",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "falls_within",
+            "dataType": "string",
+            "sourceColumn": "falls_within",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "falls_within",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "longitude",
+            "dataType": "double",
+            "sourceColumn": "longitude",
+            "sourceProviderType": "float",
+            "sourceLineageTag": "longitude",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ]
+          },
+          {
+            "name": "latitude",
+            "dataType": "double",
+            "sourceColumn": "latitude",
+            "sourceProviderType": "float",
+            "sourceLineageTag": "latitude",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ]
+          },
+          {
+            "name": "location",
+            "dataType": "string",
+            "sourceColumn": "location",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "location",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "lsoa_code",
+            "dataType": "string",
+            "sourceColumn": "lsoa_code",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "lsoa_code",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "lsoa_name",
+            "dataType": "string",
+            "sourceColumn": "lsoa_name",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "lsoa_name",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "crime_type",
+            "dataType": "string",
+            "sourceColumn": "crime_type",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "crime_type",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "last_outcome",
+            "dataType": "string",
+            "sourceColumn": "last_outcome",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "last_outcome",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "crime_year",
+            "dataType": "int64",
+            "sourceColumn": "crime_year",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "crime_year",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "crime_month_num",
+            "dataType": "int64",
+            "sourceColumn": "crime_month_num",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "crime_month_num",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "crime_quarter",
+            "dataType": "string",
+            "sourceColumn": "crime_quarter",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "crime_quarter",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "silver_police_street",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "silver"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      },
+      {
+        "name": "silver_population_lsoa",
+        "sourceLineageTag": "[silver].[silver_population_lsoa]",
+        "columns": [
+          {
+            "name": "lsoa_code",
+            "dataType": "string",
+            "sourceColumn": "lsoa_code",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "lsoa_code",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "lsoa_name",
+            "dataType": "string",
+            "sourceColumn": "lsoa_name",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "lsoa_name",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "total_population",
+            "dataType": "int64",
+            "sourceColumn": "total_population",
+            "formatString": "0",
+            "sourceProviderType": "bigint",
+            "sourceLineageTag": "total_population",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "population_band",
+            "dataType": "string",
+            "sourceColumn": "population_band",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "population_band",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "silver_population_lsoa",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "silver"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      }
+    ],
+    "expressions": [
+      {
+        "name": "DatabaseQuery",
+        "kind": "m",
+        "expression": "let\n    database = {{TDS_Endpoint}}\nin\n    database\n"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      },
+      {
+        "name": "SourceLineageTagType",
+        "value": "DatabaseFullyQualifiedName"
+      }
+    ]
+  }
+}
