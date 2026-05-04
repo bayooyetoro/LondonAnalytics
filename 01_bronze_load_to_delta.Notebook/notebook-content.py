@@ -35,6 +35,8 @@ logger = logging.getLogger(__name__)
 
 FILES_ROOT = "Files/bronze"
 
+# spark.sql("CREATE SCHEMA IF NOT EXISTS bronze")
+
 # ── Helpers ────────────────────────────────────────────────────────────────
 
 def _camel_to_snake(s: str) -> str:
@@ -78,8 +80,12 @@ def write_bronze_table(
     df: DataFrame,
     table_name: str,
     partition_cols: Optional[List[str]] = None
+    # schema_name: str = "bronze"
 ) -> None:
-    logger.info(f"Writing table: {table_name} ...")
+    # Combine schema and table name (e.g., "bronze.companies_house")
+    full_table_name = f"{table_name}"
+    
+    logger.info(f"Writing table: {full_table_name} ...")
     writer = (
         df.write
         .format("delta")
@@ -90,16 +96,20 @@ def write_bronze_table(
         valid = [c for c in partition_cols if c in df.columns]
         if valid:
             writer = writer.partitionBy(*valid)
-    writer.saveAsTable(table_name)
-    count = spark.sql(f"SELECT COUNT(*) FROM {table_name}").collect()[0][0]
-    logger.info(f"Done — {table_name}: {count:,} rows")
+            
+    writer.saveAsTable(full_table_name)
+    
+    count = spark.sql(f"SELECT COUNT(*) FROM {full_table_name}").collect()[0][0]
+    logger.info(f"Done — {full_table_name}: {count:,} rows")
+
 
 def optimize_table(table_name: str) -> None:
+    full_table_name = f"{table_name}"
     try:
-        spark.sql(f"OPTIMIZE {table_name}")
-        logger.info(f"Optimized: {table_name}")
+        spark.sql(f"OPTIMIZE {full_table_name}")
+        logger.info(f"Optimized: {full_table_name}")
     except Exception as e:
-        logger.warning(f"Optimize skipped for {table_name}: {e}")
+        logger.warning(f"Optimize skipped for {full_table_name}: {e}")
 
 # METADATA ********************
 
@@ -110,14 +120,20 @@ def optimize_table(table_name: str) -> None:
 
 # CELL ********************
 
-# ── Companies House ────────────────────────────────────────────────────────
-
 def ingest_companies_house():
     # Wildcard read — works regardless of exact filename
     source_path = f"{FILES_ROOT}/companies_house/*.csv"
     logger.info(f"Reading Companies House from {source_path}")
 
-    df = spark.read.csv(source_path, header=True, quote='"', escape='"')
+    # ADDED: multiLine=True to handle hidden line breaks in company names/addresses
+    df = spark.read.csv(
+        source_path, 
+        header=True, 
+        quote='"', 
+        escape='"', 
+        mode="DROPMALFORMED"
+    )
+    
     df = clean_df_columns(df)
 
     if "incorporation_date" in df.columns:
@@ -125,11 +141,23 @@ def ingest_companies_house():
             "incorporation_date",
             F.to_date(F.col("incorporation_date"), "dd/MM/yyyy")
         )
-        df = df.withColumn("incorporation_year", F.year("incorporation_date"))
+        return df.withColumn("incorporation_year", F.year("incorporation_date"))
 
-    write_bronze_table(df, "bronze_companies_house", partition_cols=["incorporation_year"])
+    # write_bronze_table(df, "companies_house", partition_cols=["incorporation_year"])
 
-ingest_companies_house()
+df = ingest_companies_house()
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# display(df)
+df.write.format("delta").mode("overwrite").saveAsTable("df_test")
 
 # METADATA ********************
 
@@ -163,9 +191,9 @@ def ingest_police_category(pattern: str, table_name: str, partition_col: str = "
     parts = [partition_col] if partition_col else None
     write_bronze_table(df, table_name, partition_cols=parts)
 
-ingest_police_category("*/*street*.csv",          "bronze_police_street",          "year_month")
-ingest_police_category("*/*outcomes*.csv",         "bronze_police_outcomes",         "year_month")
-ingest_police_category("*/*stop-and-search*.csv",  "bronze_police_stop_and_search",  "")
+ingest_police_category("*/*street*.csv",          "police_street",          "year_month")
+ingest_police_category("*/*outcomes*.csv",         "police_outcomes",         "year_month")
+ingest_police_category("*/*stop-and-search*.csv",  "police_stop_and_search",  "")
 
 # METADATA ********************
 
@@ -186,7 +214,7 @@ def ingest_ons_population():
     df = spark.read.csv(source_path, header=True, inferSchema=True)
     df = clean_df_columns(df)
 
-    write_bronze_table(df, "bronze_ons_population")
+    write_bronze_table(df, "ons_population")
 
 ingest_ons_population()
 
@@ -209,7 +237,7 @@ def ingest_ons_deprivation():
     df = spark.read.csv(source_path, header=True, inferSchema=True)
     df = clean_df_columns(df)
 
-    write_bronze_table(df, "bronze_ons_deprivation")
+    write_bronze_table(df, "ons_deprivation")
 
 ingest_ons_deprivation()
 
@@ -231,7 +259,7 @@ def ingest_ons_boundaries():
 
     df_bound = spark.read.csv(csv_path, header=True, inferSchema=True)
     df_bound = clean_df_columns(df_bound)
-    write_bronze_table(df_bound, "bronze_ons_boundaries")
+    write_bronze_table(df_bound, "ons_boundaries")
 
     # GeoJSON — store as raw text for Power BI map use later
     try:
@@ -242,7 +270,7 @@ def ingest_ons_boundaries():
             .withColumnRenamed("value", "content")
             .withColumn("file_path", F.lit(geo_path))
         )
-        write_bronze_table(df_geo, "bronze_ons_boundaries_geojson")
+        write_bronze_table(df_geo, "ons_boundaries_geojson")
     except Exception as e:
         logger.error(f"GeoJSON load failed: {e}")
 
@@ -260,14 +288,14 @@ ingest_ons_boundaries()
 # ── Optimize All Tables ────────────────────────────────────────────────────
 
 tables = [
-    "bronze_companies_house",
-    "bronze_police_street",
-    "bronze_police_outcomes", 
-    "bronze_police_stop_and_search",
-    "bronze_ons_population",
-    "bronze_ons_deprivation",
-    "bronze_ons_boundaries",
-    "bronze_ons_boundaries_geojson"
+    # "companies_house",
+    "police_street",
+    "police_outcomes", 
+    "police_stop_and_search",
+    "ons_population",
+    "ons_deprivation",
+    "ons_boundaries",
+    "ons_boundaries_geojson"
 ]
 
 for t in tables:
