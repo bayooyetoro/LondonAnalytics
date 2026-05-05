@@ -1,0 +1,205 @@
+version: 2
+
+models:
+
+  - name: gold_crime_per_capita
+    description: "Per-LSOA, per-year crime rates and tiers. Grain: one row per LSOA per year."
+    columns:
+      - name: lsoa_code
+        description: "LSOA 2021 code."
+        tests:
+          - not_null
+      - name: lsoa_name
+        description: "LSOA name."
+      - name: lad_name
+        description: "Local Authority / borough name."
+      - name: crime_year
+        description: "Calendar year of the crimes aggregated."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [2021, 2022, 2023]
+      - name: total_crimes
+        description: "Count of crimes observed in the LSOA-year."
+        tests:
+          - not_null
+      - name: total_population
+        description: "Total population for the LSOA (Census aggregation)."
+      - name: crimes_per_1000_residents
+        description: "Crimes per 1,000 residents (primary metric)."
+        tests:
+          - not_null
+      - name: crimes_per_resident
+        description: "Crimes per resident (decimal)."
+      - name: crime_rate_tier
+        description: "Quartile-based tier (Low, Medium, High, Very High)."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Low','Medium','High','Very High']
+      - name: imd_decile
+        description: "IMD decile for the LSOA."
+      - name: deprivation_category
+        description: "High-level IMD category (Highly Deprived..Least Deprived)."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ['lsoa_code','crime_year']
+
+  - name: gold_crime_by_type
+    description: "Quarterly counts of crime by type for each LSOA and year. Grain: LSOA + crime type + year + quarter."
+    columns:
+      - name: lsoa_code
+        description: "LSOA 2021 code."
+        tests:
+          - not_null
+      - name: lsoa_name
+        description: "LSOA name."
+      - name: crime_year
+        description: "Year of the quarter."
+        tests:
+          - not_null
+      - name: crime_quarter
+        description: "Quarter label (Q1..Q4)."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['Q1','Q2','Q3','Q4']
+      - name: crime_type
+        description: "Crime category/type."
+        tests:
+          - not_null
+      - name: crime_count
+        description: "Number of crimes for the LSOA/crime_type/year/quarter."
+        tests:
+          - not_null
+      - name: monthly_avg
+        description: "Average monthly count within the quarter (crime_count / 3)."
+      - name: cumulative_crimes_ytd
+        description: "Cumulative crimes for the year to date for the crime type."
+      - name: crime_type_rank
+        description: "Rank of the crime type by frequency within the LSOA and year."
+      - name: pct_of_lsoa_crimes
+        description: "Percent of the LSOA's yearly crimes accounted for by this crime type."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: ['lsoa_code','crime_type','crime_year','crime_quarter']
+
+  - name: gold_deprivation_crime_correlation
+    description: "Analytical correlation of IMD and crime for 2023; one row per LSOA."
+    columns:
+      - name: lsoa_code
+        description: "LSOA 2021 code."
+        tests:
+          - not_null
+          - unique
+      - name: lsoa_name
+        description: "LSOA name."
+      - name: lad_name
+        description: "Local Authority / borough name."
+      - name: total_crimes
+        description: "Total crimes in 2023 for the LSOA."
+      - name: total_population
+        description: "Total population for the LSOA."
+      - name: crimes_per_1000_residents
+        description: "Crimes per 1,000 residents for 2023."
+      - name: crime_rate_tier
+        description: "Quartile tier of crime rate."
+      - name: imd_rank
+        description: "IMD rank for the LSOA (1 = most deprived)."
+      - name: imd_decile
+        description: "IMD decile (1-10)."
+      - name: deprivation_category
+        description: "High-level IMD category."
+      - name: income_decile
+        description: "Income domain decile."
+      - name: health_decile
+        description: "Health domain decile."
+      - name: employment_decile
+        description: "Employment domain decile."
+      - name: education_decile
+        description: "Education domain decile."
+      - name: crime_deprivation_decile
+        description: "Crime domain decile."
+      - name: living_env_decile
+        description: "Living environment decile."
+      - name: composite_vulnerability_score
+        description: "0-1 vulnerability index combining IMD, crime, health, employment and education."
+        tests:
+          - not_null
+      - name: vulnerability_tier
+        description: "Binned tier of vulnerability (Critical..Minimal)."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Critical','High','Medium','Low','Minimal']
+      - name: deprivation_crime_divergence
+        description: "Absolute difference between IMD rank and crime-rate rank."
+      - name: imd_crime_agreement
+        description: "Categorical agreement/divergence between IMD decile and crime tier."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Deprived and High Crime','Deprived but Lower Crime','Affluent but High Crime','Affluent and Lower Crime','Mixed']
+
+  - name: gold_business_risk
+    description: "One row per active London company with crime-based risk scoring. Grain: company."
+    columns:
+      - name: company_number
+        description: "Companies House registration number."
+        tests:
+          - not_null
+          - unique
+      - name: company_name
+        description: "Registered company name."
+      - name: postcode
+        description: "Registered postcode."
+      - name: postcode_district
+        description: "Outward postcode (district)."
+      - name: address_line1
+        description: "First address line."
+      - name: post_town
+        description: "Post town."
+      - name: company_category
+        description: "Company category."
+      - name: company_age_years
+        description: "Company age in years."
+      - name: company_age_band
+        description: "Age band for the company."
+      - name: sic_code_primary
+        description: "Primary SIC code / description."
+      - name: sic_code_secondary
+        description: "Secondary SIC code / description."
+      - name: incorporation_year
+        description: "Year of incorporation."
+      - name: lsoa_code
+        description: "Matched LSOA code (approximate via outward postcode -> LSOA mapping)."
+      - name: lad_name
+        description: "Local Authority / borough name for matched LSOA."
+      - name: crimes_per_1000_residents
+        description: "Local crimes per 1,000 residents (2023)."
+      - name: crime_rate_tier
+        description: "Crime rate tier from gold_crime_per_capita."
+      - name: risk_score
+        description: "Integer risk score (1..5) derived from crimes_per_1000_residents."
+      - name: risk_tier
+        description: "Descriptive risk tier for Power BI filtering."
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Very Low Risk','Low Risk','Medium Risk','High Risk','Very High Risk','Unscored']
+      - name: risk_confidence
+        description: "Confidence in the risk score based on local population size."
+      - name: is_high_risk
+        description: "Binary flag (0/1) where 1 indicates high risk (risk_score >= 4)."
+        tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+      - name: imd_decile
+        description: "IMD decile for the matched LSOA."
+      - name: deprivation_category
+        description: "High-level IMD category for the matched LSOA."
