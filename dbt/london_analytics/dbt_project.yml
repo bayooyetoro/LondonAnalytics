@@ -17,7 +17,7 @@ models:
   london_analytics:
     silver:
       +materialized: table
-      +schema: ""        # no schema prefix — flat lakehouse
+      +schema: silver
     gold:
       +materialized: table
-      +schema: ""
+      +schema: gold
